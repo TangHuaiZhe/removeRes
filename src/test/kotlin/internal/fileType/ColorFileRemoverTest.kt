@@ -1,6 +1,5 @@
-package internal
+package internal.fileType
 
-import internal.filetype.AbstractRemover
 import internal.filetype.ColorFileRemover
 import internal.filetype.FileRemover
 import org.junit.Assert
@@ -19,29 +18,29 @@ class ColorFileRemoverTest {
   @Test
   fun testPatternMatches() {
     val pattern = remover.createSearchPattern("primary")
-    var fileText = "R.color.primary"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    var fileText = "R.color.primary;"
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.color.primary\n"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.color.primary)"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@color/primary\""
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@color/primary<"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
 //        fileText = "@color/primary2"
 //        Assert.assertFalse(FileRemover.isPatternMatched(fileText, pattern))
 
     fileText = "R.color.secondary"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@style/primary\""
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
   }
 
   @Test

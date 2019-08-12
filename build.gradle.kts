@@ -20,6 +20,7 @@ dependencies {
     compile("org.codehaus.groovy:groovy-all:2.4.15")
     implementation(kotlin("stdlib-jdk8"))
     compile(gradleApi())
+    implementation("org.jdom:jdom2:2.0.6")
     testCompile("junit", "junit", "4.12")
 }
 

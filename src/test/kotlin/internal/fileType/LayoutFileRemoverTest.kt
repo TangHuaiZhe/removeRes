@@ -1,6 +1,5 @@
-package internal
+package internal.fileType
 
-import internal.filetype.AbstractRemover
 import internal.filetype.FileRemover
 import internal.filetype.LayoutFileRemover
 import org.junit.Assert
@@ -23,39 +22,39 @@ class LayoutFileRemoverTest {
     var pattern = remover.createSearchPattern("activity_main")
 
     var fileText = "R.layout.activity_main);getPayCa"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "myLayout = R.layout.activity_main;"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "myLayout = R.layout.activity_main\n"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
 
     fileText = "inflater.inflate(R.layout.activity_main, null);"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "inflater.inflate(R.layout.activity_main2, null);"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.layout.fragment_main"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
 
     fileText = "@layout/activity_main\""
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@layout/activity_main<"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "ActivityMainBinding"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@layout/activity_main2\""
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@menu/activity_main"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
   }
 
   @Test

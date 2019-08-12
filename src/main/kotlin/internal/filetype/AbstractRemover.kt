@@ -109,6 +109,14 @@ abstract class AbstractRemover(
     return dryRun
   }
 
+  fun isPatternMatched(fileText: String, pattern: String): Boolean {
+    println("isPatternMatched pattern: $pattern")
+    val matcher = Pattern.compile(pattern).matcher(fileText);
+    val result = matcher.find()
+    println("isPatternMatched result: $result")
+    return result
+  }
+
   companion object {
     /**
      * 拼接需要查找的文件中的所有text内容
@@ -133,14 +141,13 @@ abstract class AbstractRemover(
       return stringBuilder.toString()
     }
 
-    @VisibleForTesting
-    fun isPatternMatched(fileText: String, pattern: String): Boolean {
-      println("isPatternMatched pattern: $pattern")
-      val matcher = Pattern.compile(pattern).matcher(fileText);
-      val result = matcher.find()
-      println("isPatternMatched result: $result")
-      return result
-    }
+//    fun isPatternMatched(fileText: String, pattern: String): Boolean {
+//      println("isPatternMatched pattern: $pattern")
+//      val matcher = Pattern.compile(pattern).matcher(fileText);
+//      val result = matcher.find()
+//      println("isPatternMatched result: $result")
+//      return result
+//    }
 
     private const val FILE_TYPE_FILTER = """(.*\.xml)|(.*\.kt)|(.*\.java)|(.*\.gradle)"""
   }

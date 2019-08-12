@@ -1,6 +1,5 @@
-package internal
+package internal.fileType
 
-import internal.filetype.AbstractRemover
 import internal.filetype.AnimFileRemover
 import internal.filetype.FileRemover
 import org.junit.Assert
@@ -19,25 +18,25 @@ class AnimFileRemoverTest {
   fun testPatternMatches() {
     val pattern = remover.createSearchPattern("fade_transition")
     var fileText = "R.anim.fade_transition\n"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.anim.fade_transition)"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.anim.fade_transition\""
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@anim/fade_transition<"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.animator.fade_transition\""
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.anim.scale_transition"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@animator/fade_transition"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
   }
 
   @Test

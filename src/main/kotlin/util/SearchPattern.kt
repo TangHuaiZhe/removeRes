@@ -18,21 +18,21 @@ object SearchPattern {
   fun create(resourceName: String, target: String, type: Type): String {
     when (type) {
       Type.STYLE -> {
-        return """(@($resourceName|${resourceName}StateList)\/$target[\s!"#\$%&'()\*\+\-\,\\/:;<=>?@\[\\\]^`{|}~])|(R\.$resourceName\.${toCamelCaseWithUnderscore(
+        return """(@($resourceName|${resourceName}StateList)\/$target["|<|.])|(R\.$resourceName\.${toCamelCaseWithUnderscore(
             target
-        )})|($target\.)|(parent="$target")"""
+        )}[,|)|;|"|\s|:])|($target\.)|(parent="$target")"""
       }
       Type.DRAWABLE -> {
         val targetDrawable = target.replace(".9", "")
-        return """(@($resourceName|${resourceName}StateList)\/$targetDrawable["|<])|(R\.$resourceName\.$targetDrawable[,|)|;|"|\n])"""
+        return """(@($resourceName|${resourceName}StateList)\/$targetDrawable["|<])|(R\.$resourceName\.$targetDrawable[,|)|;|"|\s|:| ])"""
       }
       Type.LAYOUT -> {
-        return """(@($resourceName|${resourceName}StateList)\/$target["|<])|(R\.$resourceName\.$target[,|)|;|"|\n])|(${toCamelCase(
+        return """(@($resourceName|${resourceName}StateList)\/$target["|<])|(R\.$resourceName\.$target[,|)|;|"|\s|:])|(${toCamelCase(
             target
         )}Binding)"""
       }
       else -> {
-        return """(@($resourceName|${resourceName}StateList)\/$target["|<])|(R\.$resourceName\.$target)"""
+        return """(@($resourceName|${resourceName}StateList)\/$target["|<])|(R\.$resourceName\.$target[,|)|;|"|\s|:| ])"""
       }
     }
   }
@@ -47,9 +47,17 @@ object SearchPattern {
 
   @VisibleForTesting
   fun toCamelCaseWithUnderscore(name: String): String {
-    return name.replace(Regex("(\\.)([A-Za-z0-9])")) {
-      { "_${it.value.toUpperCase()}" }.toString()
+    val builder = StringBuilder()
+    builder.append(name)
+    name.forEachIndexed { index, value ->
+      if (value == '.') {
+        builder.setCharAt(index, '_')
+        if (index + 1 <= name.length) {
+          builder.setCharAt(index + 1, name[index + 1].toUpperCase())
+        }
+      }
     }
+    return builder.toString()
   }
 
   private fun toCamelCase(text: String): String {

@@ -59,7 +59,7 @@ open class FileRemover constructor(
 
 }
 
-private fun File.matchLast(fileType: String): Boolean {
+fun File.matchLast(fileType: String): Boolean {
   // (\/${type}-.*$)|(\/${type}$)
   val regex = Regex("""(.*/$fileType-.*$)|(.*/$fileType$)""")
   println("the regex is $regex")

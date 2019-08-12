@@ -1,6 +1,5 @@
-package internal
+package internal.fileType
 
-import internal.filetype.AbstractRemover
 import internal.filetype.DrawableFileRemover
 import internal.filetype.FileRemover
 import org.junit.Assert
@@ -20,28 +19,28 @@ class DrawableFileRemoverTest {
   fun testPatternMatches() {
     var pattern = remover.createSearchPattern("ic_settings")
     var fileText = "R.drawable.ic_settings\n"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.drawable.ic_settings)"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@drawable/ic_settings\""
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@drawable/ic_settings<"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.drawable.ic_setting"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@mipmap/ic_settings"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
 
     pattern = remover.createSearchPattern("img_balloon.9")
 
     fileText = "@drawable/img_balloon\""
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
 //        fileText = "@drawable/img_balloon2\""
 //        Assert.assertFalse(FileRemover.isPatternMatched(fileText, pattern))

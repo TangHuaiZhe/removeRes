@@ -18,7 +18,7 @@ import util.ColoredLogger
 open class RemoveResPlugin : Plugin<Project> {
   override fun apply(project: Project) {
 
-    println("this is tangniubi RemoveResPlugin")
+    ColoredLogger.logGreen("this is RemoveResPlugin,dealing with ${project.name}")
 
     project.extensions.create(RemoveResExt.name, RemoveResExt::class.java)
 

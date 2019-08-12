@@ -1,6 +1,5 @@
-package internal
+package internal.fileType
 
-import internal.filetype.AbstractRemover
 import internal.filetype.FileRemover
 import internal.filetype.MipmapFileRemover
 import org.junit.Assert
@@ -20,22 +19,22 @@ class MipmapFileRemoverTest {
   fun testPatternMatches() {
     val pattern = remover.createSearchPattern("ic_launcher")
     var fileText = "R.mipmap.ic_launcher)"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.mipmap.ic_launcher\""
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@mipmap/ic_launcher\""
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@mipmap/ic_launcher<"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.drawable.ic_launch"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@mipmap/ic_launcher_round\""
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
   }
 

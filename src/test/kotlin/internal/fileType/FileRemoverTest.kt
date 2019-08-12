@@ -1,4 +1,4 @@
-package internal
+package internal.fileType
 
 import internal.filetype.DrawableFileRemover
 import internal.filetype.FileRemover

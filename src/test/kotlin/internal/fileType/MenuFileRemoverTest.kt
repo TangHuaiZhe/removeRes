@@ -1,6 +1,5 @@
-package internal
+package internal.fileType
 
-import internal.filetype.AbstractRemover
 import internal.filetype.FileRemover
 import internal.filetype.MenuFileRemover
 import org.junit.Assert
@@ -19,26 +18,29 @@ class MenuFileRemoverTest {
   @Test
   fun testPatternMatches() {
     val pattern = remover.createSearchPattern("menu_main")
-    var fileText = "R.menu.menu_main"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    var fileText = "R.menu.menu_main;"
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.menu.menu_main)"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
+
+    fileText = "R.menu.menu_main)"
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@menu/menu_main\""
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@menu/menu_main<"
-    Assert.assertTrue(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertTrue(remover.isPatternMatched(fileText, pattern))
 
     fileText = "R.menu.menu_detail"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@menu/menu_main2\""
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
 
     fileText = "@layout/menu_main"
-    Assert.assertFalse(AbstractRemover.isPatternMatched(fileText, pattern))
+    Assert.assertFalse(remover.isPatternMatched(fileText, pattern))
   }
 
   @Test
