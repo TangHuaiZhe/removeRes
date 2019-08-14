@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.tangnb.plugin"
-version = "1.0.1-SNAPSHOT"
+version = "1.0.3-SNAPSHOT"
 
 repositories {
     jcenter()
@@ -48,7 +48,7 @@ pluginBundle {
 
     // tags and description can be set for the whole bundle here, but can also
     // be set / overridden in the config for specific plugins
-    description = "Greetings from tangniubi!"
+    description = "Help to remove unused resource file in Android project"
 
     // The plugins block can contain multiple plugin entries.
     //
@@ -69,8 +69,8 @@ pluginBundle {
 
         "RemoveResPlugin" {
             // id is captured from java-gradle-plugin configuration
-            displayName = "Gradle Greeting plugin tang"
-            tags = listOf("individual", "tags", "per", "plugin")
+            displayName = "Remove unused res in Android project"
+            tags = listOf("android", "kotlin", "resource", "plugin")
             version = version
         }
     }
