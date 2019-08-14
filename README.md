@@ -1,5 +1,5 @@
 # removeRes
-移除Android项目中没有使用到的资源.
+移除Android项目中没有使用到的资源文件和xml value.
 
 集成:
 ```gradle
@@ -10,7 +10,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.tangnb.plugin:removeRes:1.0.1-SNAPSHOT"
+    classpath "gradle.plugin.com.tangnb.plugin:removeRes:1.0.2-SNAPSHOT"
   }
 }
 
