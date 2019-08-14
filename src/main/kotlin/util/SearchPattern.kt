@@ -8,7 +8,6 @@ package util
 import groovy.lang.Closure
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import org.codehaus.groovy.runtime.StringGroovyMethods
-import org.gradle.internal.impldep.com.google.common.annotations.VisibleForTesting
 
 object SearchPattern {
   /**
@@ -45,7 +44,6 @@ object SearchPattern {
     return SearchPattern.create(resourceName, target, Type.DEFAULT)
   }
 
-  @VisibleForTesting
   fun toCamelCaseWithUnderscore(name: String): String {
     val builder = StringBuilder()
     builder.append(name)
@@ -79,10 +77,10 @@ object SearchPattern {
     companion object {
 
       fun from(type: String): Type {
-        return when {
-          StringGroovyMethods.isCase("style", type) -> STYLE
-          StringGroovyMethods.isCase("drawable", type) -> DRAWABLE
-          StringGroovyMethods.isCase("layout", type) -> LAYOUT
+        return when (type) {
+          "style" -> STYLE
+          "drawable" -> DRAWABLE
+          "layout" -> LAYOUT
           else -> DEFAULT
         }
       }

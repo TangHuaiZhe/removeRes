@@ -62,13 +62,13 @@ open class FileRemover constructor(
 fun File.matchLast(fileType: String): Boolean {
   // (\/${type}-.*$)|(\/${type}$)
   val regex = Regex("""(.*/$fileType-.*$)|(.*/$fileType$)""")
-  println("the regex is $regex")
-  println("file is $path")
+//  println("the regex is $regex")
+//  println("file is $path")
   return this.path.matches(regex)
 }
 
 fun main() {
-  var file = File("/Users/tang/Code/Shengpay/wifi-pay-sdk/app/res/layout")
+  val file = File("/Users/tang/Code/Shengpay/wifi-pay-sdk/app/res/layout")
   print(file.matchLast("layout"))
 }
 

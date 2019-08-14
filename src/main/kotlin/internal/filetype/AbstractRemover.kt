@@ -41,9 +41,8 @@ abstract class AbstractRemover(
    */
   @VisibleForTesting
   fun createSearchPattern(target: String): String {
-    val searchPattern = SearchPattern.create(resourceName, target, type)
-    println("匹配正则: $searchPattern")
-    return searchPattern
+    //    println("匹配正则: $searchPattern")
+    return SearchPattern.create(resourceName, target, type)
   }
 
   /**
@@ -80,7 +79,7 @@ abstract class AbstractRemover(
   }
 
   fun checkTargetTextMatches(targetText: String): Boolean {
-    ColoredLogger.logGreen("检查 $fileType 类型文件是否被使用，文件名: $targetText.$fileType")
+//    ColoredLogger.logGreen("检查 $fileType 类型文件是否被使用，文件名: $targetText.$fileType")
     val pattern = createSearchPattern(targetText)
     return isPatternMatched(
         scanTargetFileTexts,
@@ -109,12 +108,12 @@ abstract class AbstractRemover(
     return dryRun
   }
 
+  /**
+   * 是否能部分匹配上?
+   */
   fun isPatternMatched(fileText: String, pattern: String): Boolean {
-    println("isPatternMatched pattern: $pattern")
     val matcher = Pattern.compile(pattern).matcher(fileText);
-    val result = matcher.find()
-    println("isPatternMatched result: $result")
-    return result
+    return matcher.find()
   }
 
   companion object {

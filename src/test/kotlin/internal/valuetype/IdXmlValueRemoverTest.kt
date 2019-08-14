@@ -9,7 +9,7 @@ import util.SearchPattern
  */
 class IdXmlValueRemoverTest {
 
-  private val remover: XmlValueRemover = IdXmlValueRemover()
+  private val remover = IdXmlValueRemover()
 
   @Test
   fun testPatternMatches() {
@@ -36,17 +36,17 @@ class IdXmlValueRemoverTest {
 
   @Test
   fun getFileType() {
-    Assert.assertEquals("attr", remover.fileType)
+    Assert.assertEquals("id", remover.fileType)
   }
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("styleable", remover.resourceName)
+    Assert.assertEquals("id", remover.resourceName)
   }
 
   @Test
   fun getTagName() {
-    Assert.assertEquals("declare-styleable", remover.tagName)
+    Assert.assertEquals("item", remover.tagName)
   }
 
   @Test

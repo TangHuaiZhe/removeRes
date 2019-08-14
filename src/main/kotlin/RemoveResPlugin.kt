@@ -5,7 +5,15 @@ import internal.filetype.DrawableFileRemover
 import internal.filetype.LayoutFileRemover
 import internal.filetype.MenuFileRemover
 import internal.filetype.MipmapFileRemover
-import org.codehaus.groovy.runtime.DefaultGroovyMethods
+import internal.valuetype.AttrXmlValueRemover
+import internal.valuetype.BoolXmlValueRemover
+import internal.valuetype.ColorXmlValueRemover
+import internal.valuetype.DimenXmlValueRemover
+import internal.valuetype.IdXmlValueRemover
+import internal.valuetype.IntegerXmlValueRemover
+import internal.valuetype.StringXmlValueRemover
+import internal.valuetype.StyleXmlValueRemover
+import internal.valuetype.ThemeXmlValueRemover
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import util.ColoredLogger
@@ -24,24 +32,42 @@ open class RemoveResPlugin : Plugin<Project> {
 
     project.task("RemoveRes").doLast {
 
-      val extension: RemoveResExt = DefaultGroovyMethods.asType(
-          project.extensions.findByName(RemoveResExt.name),
-          RemoveResExt::class.java
-      )
+      val extension: RemoveResExt = project.extensions.findByName(RemoveResExt.name) as RemoveResExt
+
       logExtensionInfo(extension)
 
       // Remove unused files
-      ArrayList(
-          listOf(
-              LayoutFileRemover(), MenuFileRemover(),
-              MipmapFileRemover(),
-              DrawableFileRemover(), AnimatorFileRemover(),
-              AnimFileRemover(),
-              ColorFileRemover()
-          )
-      ).forEach {
-        it.remove(project, extension)
+      if (extension.openRemoveFile) {
+        ColoredLogger.logGreen("doing FileRemover")
+        ArrayList(
+            listOf(
+                LayoutFileRemover(), MenuFileRemover(),
+                MipmapFileRemover(),
+                DrawableFileRemover(), AnimatorFileRemover(),
+                AnimFileRemover(),
+                ColorFileRemover()
+            )
+        ).forEach {
+          it.remove(project, extension)
+        }
       }
+
+      //Remove unused xml values
+      if (extension.openRemoveXmlValues) {
+        ColoredLogger.logGreen("doing XmlRemover")
+        ArrayList(
+            listOf(
+                AttrXmlValueRemover(), BoolXmlValueRemover(),
+                ColorXmlValueRemover(),
+                DimenXmlValueRemover(), IdXmlValueRemover(),
+                IntegerXmlValueRemover(),
+                StringXmlValueRemover(), StyleXmlValueRemover(), ThemeXmlValueRemover()
+            )
+        ).forEach {
+          it.remove(project, extension)
+        }
+      }
+
     }
   }
 

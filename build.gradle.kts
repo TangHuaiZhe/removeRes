@@ -71,7 +71,7 @@ pluginBundle {
             // id is captured from java-gradle-plugin configuration
             displayName = "Gradle Greeting plugin tang"
             tags = listOf("individual", "tags", "per", "plugin")
-            version = "1.0"
+            version = version
         }
     }
 }

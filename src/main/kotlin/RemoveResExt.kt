@@ -11,6 +11,8 @@ open class RemoveResExt {
   var extraRemovers: List<AbstractRemover> = ArrayList()
   var excludeNames: ArrayList<String> = ArrayList()
   var dryRun = false
+  var openRemoveFile = true
+  var openRemoveXmlValues = true
 
   companion object {
     const val name = "RemoveRes"
