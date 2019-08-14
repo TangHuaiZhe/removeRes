@@ -10,7 +10,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.tangnb.plugin:removeRes:1.0.2-SNAPSHOT"
+    classpath "gradle.plugin.com.tangnb.plugin:removeRes:1.0.3-SNAPSHOT"
   }
 }
 
