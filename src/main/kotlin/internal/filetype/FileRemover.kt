@@ -1,5 +1,6 @@
 package internal.filetype
 
+import internal.AbstractRemover
 import util.ColoredLogger
 import util.SearchPattern
 import java.io.File

@@ -1,4 +1,4 @@
-package internal.filetype
+package internal
 
 import RemoveResExt
 import org.gradle.api.Project
@@ -58,7 +58,7 @@ abstract class AbstractRemover(
       it.projectDir.path
     }
     scanTargetFileTexts =
-        createScanTargetFileTexts(moduleSrcDirs)
+      createScanTargetFileTexts(moduleSrcDirs)
 
     ColoredLogger.log("[$fileType] ======== Start $fileType checking ========")
 
@@ -128,7 +128,7 @@ abstract class AbstractRemover(
           //                    println("deal with file ${it.name} , prepare to filter")
           if (it.name.matches(
                   Regex(
-                      FILE_TYPE_FILTER
+                    FILE_TYPE_FILTER
                   )
               )
           ) {

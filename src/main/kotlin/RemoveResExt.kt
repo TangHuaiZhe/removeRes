@@ -1,4 +1,4 @@
-import internal.filetype.AbstractRemover
+import internal.AbstractRemover
 import java.util.ArrayList
 
 /**

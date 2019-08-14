@@ -1,6 +1,6 @@
 package internal.valuetype
 
-import internal.filetype.AbstractRemover
+import internal.AbstractRemover
 import internal.filetype.matchLast
 import org.jdom2.Content
 import org.jdom2.Document
