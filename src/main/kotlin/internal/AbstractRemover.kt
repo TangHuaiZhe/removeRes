@@ -14,18 +14,12 @@ import java.util.regex.Pattern
  * description:
  */
 abstract class AbstractRemover(
-  /**
-   * directory/file name to find files like drawable, dimen, string
-   */
   open val fileType: String,
   /**
-   * Resource name to check its existence like @`string`/app_name, $.`string`/app_name
+   *  @`string`/app_name, $.`string`/app_name
    * 资源名，检查是否在代码和xml中有引用
    */
   open val resourceName: String,
-  /**
-   * Search pattern ex) theme should specified to Type.STYLE
-   */
   open val type: SearchPattern.Type
 ) {
   var excludeNames: ArrayList<String> = ArrayList()
@@ -33,11 +27,6 @@ abstract class AbstractRemover(
 
   abstract fun removeEach(resDirFile: File, scanTargetFileTexts: String)
 
-  /**
-   * @param target is file name or attribute name
-   * @return pattern string to grep src
-   */
-  @VisibleForTesting
   fun createSearchPattern(target: String): String {
     //    println("匹配正则: $searchPattern")
     return SearchPattern.create(resourceName, target, type)
