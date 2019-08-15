@@ -7,7 +7,7 @@ class MipmapFileRemover constructor(
   override val resourceName: String = "mipmap",
   override val type: SearchPattern.Type = SearchPattern.Type.DRAWABLE
 ) : FileRemover(
-    fileType,
-    resourceName,
-    type
+  fileType,
+  resourceName,
+  type
 )

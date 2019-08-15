@@ -33,18 +33,18 @@ open class XmlValueRemover constructor(
   type: SearchPattern.Type = SearchPattern.Type.DEFAULT
 ) : AbstractRemover(fileType, resourceName, type) {
 
-  override fun removeEach(resDirFile: File) {
+  override fun removeEach(resDirFile: File, scanTargetFileTexts: String) {
     resDirFile.walk().filter { it.isDirectory && it.matchLast("values") }.forEach {
       // 遍历 res-values 目录下的所有文件
       it.walk().filter { it1 -> !it1.isDirectory && it1.exists() }.forEach { it2 ->
         if (isPatternMatched(it2.name, "$fileType.*")) {
-          removeTagIfNeed(it2)
+          removeTagIfNeed(it2, scanTargetFileTexts)
         }
       }
     }
   }
 
-  private fun removeTagIfNeed(file: File) {
+  private fun removeTagIfNeed(file: File, scanTargetFileTexts: String) {
     if (isMatchedExcludeNames(file.path)) {
       ColoredLogger.logYellow("[" + fileType + "]   Ignore checking " + file.name)
       return
@@ -79,21 +79,21 @@ open class XmlValueRemover constructor(
             val attribute = element.getAttribute("override", TOOLS_NAMESPACE)
             if (attribute?.value == "true") {
               ColoredLogger.logYellow(
-                  "["
-                      + fileType
-                      + "]   Skip checking "
-                      + attr.value
-                      + " which has tools:override in "
-                      + file.name
+                "["
+                    + fileType
+                    + "]   Skip checking "
+                    + attr.value
+                    + " which has tools:override in "
+                    + file.name
               )
               continue
             }
 
-            val isMatched = checkTargetTextMatches(attr.value)
+            val isMatched = checkTargetTextMatches(attr.value, scanTargetFileTexts)
 
             if (!isMatched) {
               ColoredLogger.logGreen(
-                  "[" + fileType + "]   Remove " + attr.value + " in " + file.name
+                "[" + fileType + "]   Remove " + attr.value + " in " + file.name
               )
               if (!dryRun) {
                 iterator.remove()
@@ -142,7 +142,7 @@ open class XmlValueRemover constructor(
       }
       // TODO This is a temporary fix to remove extra spaces in last </resources>.
       file.writeText(
-          stringWriter.toString().replaceFirst("""\n\s+<\/resources>""", """\n</resources>""")
+        stringWriter.toString().replaceFirst("""\n\s+<\/resources>""", """\n</resources>""")
       )
     }
 
@@ -151,6 +151,6 @@ open class XmlValueRemover constructor(
       Verifier.isHighSurrogate(ch) || 60 == ch.toInt().ushr(10)
     }
     private val TOOLS_NAMESPACE =
-        Namespace.getNamespace("tools", "http://schemas.android.com/tools")
+      Namespace.getNamespace("tools", "http://schemas.android.com/tools")
   }
 }

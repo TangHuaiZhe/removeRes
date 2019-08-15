@@ -13,7 +13,6 @@ class DimenXmlValueRemoverTest {
 
   private val remover: XmlValueRemover = DimenXmlValueRemover()
 
-
   @Test
   fun testPatternMatches() {
     val pattern = remover.createSearchPattern("text_medium")

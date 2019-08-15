@@ -17,6 +17,7 @@ import internal.valuetype.ThemeXmlValueRemover
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import util.ColoredLogger
+import java.io.File
 
 /**
  * author: tang
@@ -26,11 +27,17 @@ import util.ColoredLogger
 open class RemoveResPlugin : Plugin<Project> {
   override fun apply(project: Project) {
 
-    ColoredLogger.logGreen("this is RemoveResPlugin,dealing with ${project.name}")
-
     project.extensions.create(RemoveResExt.name, RemoveResExt::class.java)
 
+    val moduleSrcDirs = getModuleSrcDirs(project)
+    ColoredLogger.logYellow("全部模块: $moduleSrcDirs")
+
+    val scanTargetFileTexts = createScanTargetFileTexts(moduleSrcDirs)
+    ColoredLogger.logBlue("createScanTargetFileTexts ok")
+
     project.task("RemoveRes").doLast {
+
+      ColoredLogger.logBlue("this is RemoveResPlugin ${project.version},dealing with ${project.name}")
 
       val extension: RemoveResExt = project.extensions.findByName(RemoveResExt.name) as RemoveResExt
 
@@ -40,15 +47,16 @@ open class RemoveResPlugin : Plugin<Project> {
       if (extension.openRemoveFile) {
         ColoredLogger.logGreen("doing FileRemover")
         ArrayList(
-            listOf(
-                LayoutFileRemover(), MenuFileRemover(),
-                MipmapFileRemover(),
-                DrawableFileRemover(), AnimatorFileRemover(),
-                AnimFileRemover(),
-                ColorFileRemover()
-            )
-        ).forEach {
-          it.remove(project, extension)
+          listOf(
+            LayoutFileRemover(), MenuFileRemover(),
+            MipmapFileRemover(),
+            DrawableFileRemover(), AnimatorFileRemover(),
+            AnimFileRemover(),
+            ColorFileRemover()
+          )
+        ).parallelStream().forEach {
+          ColoredLogger.logYellow("1,[${it.fileType}] ======== Start ${it.fileType} checking in ${project.name}========")
+          it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
         }
       }
 
@@ -56,18 +64,17 @@ open class RemoveResPlugin : Plugin<Project> {
       if (extension.openRemoveXmlValues) {
         ColoredLogger.logGreen("doing XmlRemover")
         ArrayList(
-            listOf(
-                AttrXmlValueRemover(), BoolXmlValueRemover(),
-                ColorXmlValueRemover(),
-                DimenXmlValueRemover(), IdXmlValueRemover(),
-                IntegerXmlValueRemover(),
-                StringXmlValueRemover(), StyleXmlValueRemover(), ThemeXmlValueRemover()
-            )
-        ).forEach {
-          it.remove(project, extension)
+          listOf(
+            AttrXmlValueRemover(), BoolXmlValueRemover(),
+            ColorXmlValueRemover(),
+            DimenXmlValueRemover(), IdXmlValueRemover(),
+            IntegerXmlValueRemover(),
+            StringXmlValueRemover(), StyleXmlValueRemover(), ThemeXmlValueRemover()
+          )
+        ).parallelStream().forEach {
+          it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
         }
       }
-
     }
   }
 
@@ -88,5 +95,36 @@ open class RemoveResPlugin : Plugin<Project> {
       }
       ColoredLogger.log("dryRun: " + extension.dryRun.toString())
     }
+  }
+
+  private fun getModuleSrcDirs(project: Project): ArrayList<String> {
+    return project.rootProject.allprojects.filter {
+      it.name != project.rootProject.name
+    }.map {
+      it.projectDir.path
+    } as ArrayList
+  }
+
+  /**
+   * 拼接需要查找的文件中的所有text内容
+   */
+  private fun createScanTargetFileTexts(moduleSrcDirs: List<String>): String {
+    val stringBuilder = StringBuilder()
+
+    moduleSrcDirs.parallelStream().map { File(it) }.forEach { srcDirFile ->
+      srcDirFile.walk().forEach {
+        //                    println("deal with file ${it.name} , prepare to filter")
+        if (it.name.matches(
+            Regex(
+              """(.*\.xml)|(.*\.kt)|(.*\.java)|(.*\.gradle)"""
+            )
+          )
+        ) {
+          stringBuilder.append(it.readText())
+        }
+      }
+    }
+//            ColoredLogger.logGreen("createScanTargetFileTexts: $stringBuilder")
+    return stringBuilder.toString()
   }
 }

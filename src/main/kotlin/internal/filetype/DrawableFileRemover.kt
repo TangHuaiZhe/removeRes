@@ -7,8 +7,8 @@ class DrawableFileRemover constructor(
   override val resourceName: String = "drawable",
   override val type: SearchPattern.Type = SearchPattern.Type.DRAWABLE
 ) : FileRemover(
-    fileType,
-    resourceName,
-    type
+  fileType,
+  resourceName,
+  type
 )
 

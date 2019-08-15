@@ -18,7 +18,7 @@ object SearchPattern {
     when (type) {
       Type.STYLE -> {
         return """(@($resourceName|${resourceName}StateList)\/$target["|<|.])|(R\.$resourceName\.${toCamelCaseWithUnderscore(
-            target
+          target
         )}[,|)|;|"|\s|:])|($target\.)|(parent="$target")"""
       }
       Type.DRAWABLE -> {
@@ -27,7 +27,7 @@ object SearchPattern {
       }
       Type.LAYOUT -> {
         return """(@($resourceName|${resourceName}StateList)\/$target["|<])|(R\.$resourceName\.$target[,|)|;|"|\s|:])|(${toCamelCase(
-            target
+          target
         )}Binding)"""
       }
       else -> {
@@ -60,11 +60,11 @@ object SearchPattern {
 
   private fun toCamelCase(text: String): String {
     return StringGroovyMethods.capitalize(
-        StringGroovyMethods.replaceAll(text, "(_)([A-Za-z0-9])", object : Closure<Any>(null, null) {
-          fun doCall(it: Array<Any>): Any {
-            return DefaultGroovyMethods.invokeMethod(it[2], "toUpperCase", arrayOfNulls<Any>(0))
-          }
-        })
+      StringGroovyMethods.replaceAll(text, "(_)([A-Za-z0-9])", object : Closure<Any>(null, null) {
+        fun doCall(it: Array<Any>): Any {
+          return DefaultGroovyMethods.invokeMethod(it[2], "toUpperCase", arrayOfNulls<Any>(0))
+        }
+      })
     )
   }
 

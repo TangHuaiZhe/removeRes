@@ -13,7 +13,7 @@ import java.io.File
 class DirectoryMatcherTest {
 
   @Test
-  fun testDirMatch(){
+  fun testDirMatch() {
     //test match type with the last part of dir name
 
     var dirName = "/values"

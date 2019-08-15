@@ -6,7 +6,7 @@ package internal.valuetype
  * description:
  */
 class StringXmlValueRemover(
-  fileType: String="string",
-  resourceName: String="string",
-  tagName: String="string"
+  fileType: String = "string",
+  resourceName: String = "string",
+  tagName: String = "string"
 ) : XmlValueRemover(fileType, resourceName, tagName)

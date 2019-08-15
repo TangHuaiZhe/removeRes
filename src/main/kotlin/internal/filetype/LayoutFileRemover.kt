@@ -7,7 +7,7 @@ class LayoutFileRemover constructor(
   override val resourceName: String = "layout",
   override val type: SearchPattern.Type = SearchPattern.Type.LAYOUT
 ) : FileRemover(
-    fileType,
-    resourceName,
-    type
+  fileType,
+  resourceName,
+  type
 )

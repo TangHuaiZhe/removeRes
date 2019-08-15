@@ -1,7 +1,6 @@
 package internal
 
 import RemoveResExt
-import org.gradle.api.Project
 import org.gradle.internal.impldep.com.google.common.annotations.VisibleForTesting
 import util.ColoredLogger
 import util.SearchPattern
@@ -29,11 +28,10 @@ abstract class AbstractRemover(
    */
   open val type: SearchPattern.Type
 ) {
-  var scanTargetFileTexts = ""
   var excludeNames: ArrayList<String> = ArrayList()
   var dryRun = false
 
-  abstract fun removeEach(resDirFile: File)
+  abstract fun removeEach(resDirFile: File, scanTargetFileTexts: String)
 
   /**
    * @param target is file name or attribute name
@@ -48,42 +46,36 @@ abstract class AbstractRemover(
   /**
    * 根据fileType 删除多余文件
    */
-  fun remove(project: Project, extension: RemoveResExt) {
+  fun remove(
+    moduleSrcDirs: ArrayList<String>,
+    scanTargetFileTexts: String,
+    extension: RemoveResExt
+  ) {
     this.dryRun = extension.dryRun
     this.excludeNames = extension.excludeNames
 
-    val moduleSrcDirs: List<String> = project.rootProject.allprojects.filter {
-      it.name != project.rootProject.name
-    }.map {
-      it.projectDir.path
-    }
-    scanTargetFileTexts =
-      createScanTargetFileTexts(moduleSrcDirs)
-
-    ColoredLogger.log("[$fileType] ======== Start $fileType checking ========")
-
     //todo 兼容多渠道
     moduleSrcDirs.forEach {
-      ColoredLogger.log("Checking [$fileType] in $it")
+      ColoredLogger.logBlue("2,Checking [$fileType] in $it")
 
       var resDirFile = File("$it/src/main/res")
       if (resDirFile.exists()) {
-        removeEach(resDirFile)
+        removeEach(resDirFile, scanTargetFileTexts)
       }
 
       resDirFile = File("$it/res")
       if (resDirFile.exists()) {
-        removeEach(resDirFile)
+        removeEach(resDirFile, scanTargetFileTexts)
       }
     }
   }
 
-  fun checkTargetTextMatches(targetText: String): Boolean {
+  fun checkTargetTextMatches(targetText: String, scanTargetFileTexts: String): Boolean {
 //    ColoredLogger.logGreen("检查 $fileType 类型文件是否被使用，文件名: $targetText.$fileType")
     val pattern = createSearchPattern(targetText)
     return isPatternMatched(
-        scanTargetFileTexts,
-        pattern
+      scanTargetFileTexts,
+      pattern
     )
   }
 
@@ -117,37 +109,8 @@ abstract class AbstractRemover(
   }
 
   companion object {
-    /**
-     * 拼接需要查找的文件中的所有text内容
-     */
-    private fun createScanTargetFileTexts(moduleSrcDirs: List<String>): String {
-      val stringBuilder = StringBuilder()
 
-      moduleSrcDirs.map { File(it) }.filter { it.exists() }.forEach { srcDirFile ->
-        srcDirFile.walk().forEach {
-          //                    println("deal with file ${it.name} , prepare to filter")
-          if (it.name.matches(
-                  Regex(
-                    FILE_TYPE_FILTER
-                  )
-              )
-          ) {
-            stringBuilder.append(it.readText())
-          }
-        }
-      }
-//            ColoredLogger.logGreen("createScanTargetFileTexts: $stringBuilder")
-      return stringBuilder.toString()
-    }
+    var moduleSrcDirs = ArrayList<String>()
 
-//    fun isPatternMatched(fileText: String, pattern: String): Boolean {
-//      println("isPatternMatched pattern: $pattern")
-//      val matcher = Pattern.compile(pattern).matcher(fileText);
-//      val result = matcher.find()
-//      println("isPatternMatched result: $result")
-//      return result
-//    }
-
-    private const val FILE_TYPE_FILTER = """(.*\.xml)|(.*\.kt)|(.*\.java)|(.*\.gradle)"""
   }
 }

@@ -13,7 +13,6 @@ class ColorXmlValueRemoverTest {
 
   private val remover: XmlValueRemover = ColorXmlValueRemover()
 
-
   @Test
   fun testPatternMatches() {
     val pattern = remover.createSearchPattern("primary")

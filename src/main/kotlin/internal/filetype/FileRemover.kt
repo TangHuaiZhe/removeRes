@@ -11,21 +11,29 @@ open class FileRemover constructor(
   type: SearchPattern.Type = SearchPattern.Type.DEFAULT
 ) : AbstractRemover(fileType, resourceName, type) {
 
-  override fun removeEach(resDirFile: File) {
-    delFile(resDirFile)
+  override fun removeEach(resDirFile: File, scanTargetFileTexts: String) {
+    resDirFile.walk().forEach { it ->
+      if (it.isDirectory && it.matchLast(fileType)) {
+        ColoredLogger.log("3,check Dir: ${it.path} , prepare to removeFileIfNeed")
+        it.walk().filter { !it.isDirectory }.forEach {
+          removeFileIfNeed(it, scanTargetFileTexts)
+        }
+      }
+    }
   }
 
-  private fun removeFileIfNeed(file: File): Boolean {
+  private fun removeFileIfNeed(file: File, scanTargetFileTexts: String): Boolean {
     if (isMatchedExcludeNames(file.path)) {
-      ColoredLogger.logYellow("[$fileType]   Ignore checking ${file.name}")
+      ColoredLogger.logYellow("4,[$fileType]   Ignore checking ${file.name}")
       return false
     }
 
     val isMatched: Boolean = checkTargetTextMatches(
-        file.nameWithoutExtension)
+      file.nameWithoutExtension, scanTargetFileTexts
+    )
 
     return if (!isMatched) {
-      ColoredLogger.logGreen("[$fileType]  ${file.name} 未使用；Remove!!")
+      ColoredLogger.logGreen("4,[$fileType]  ${file.name} 未使用；Remove!!")
       if (!dryRun) {
         file.delete()
       }
@@ -34,17 +42,6 @@ open class FileRemover constructor(
       false
     }
 
-  }
-
-  private fun delFile(file: File) {
-    file.walk().forEach { it ->
-      if (it.isDirectory && it.matchLast(fileType)) {
-        ColoredLogger.logGreen("check Dir: ${it.name} , prepare to removeFileIfNeed")
-        it.walk().filter { !it.isDirectory }.forEach {
-          removeFileIfNeed(it)
-        }
-      }
-    }
   }
 
   companion object {
