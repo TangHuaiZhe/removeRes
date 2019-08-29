@@ -66,7 +66,7 @@ fun File.matchLast(fileType: String): Boolean {
 }
 
 fun main() {
-  val file = File("/Users/tang/Code/Shengpay/wifi-pay-sdk/app/res/layout")
+  val file = File("app/res/layout")
   print(file.matchLast("layout"))
 }
 
