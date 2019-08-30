@@ -52,12 +52,12 @@ class AnimatorFileRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("animator", remover.resourceName)
+    Assert.assertEquals("animator", remover.resType)
   }
 
   @Test
   fun getResourceType() {
-    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.mainType)
   }
 
 }

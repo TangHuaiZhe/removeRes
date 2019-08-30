@@ -45,7 +45,7 @@ class MenuFileRemoverTest {
 
   @Test
   fun getType() {
-    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.mainType)
   }
 
   @Test
@@ -55,6 +55,6 @@ class MenuFileRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("menu", remover.resourceName)
+    Assert.assertEquals("menu", remover.resType)
   }
 }

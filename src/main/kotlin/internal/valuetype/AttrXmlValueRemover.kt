@@ -6,11 +6,8 @@ package internal.valuetype
  * description:
  */
 class AttrXmlValueRemover constructor(
-  fileType: String = "attr",
+  fileType: String = "attrs",
   resourceName: String = "styleable",
-  /**
-   * Tag name to extract value from xml like <`dimen` name="width">, <`string` name="app_name">
-   */
   override var tagName: String = "declare-styleable"
 ) : XmlValueRemover(
   fileType,

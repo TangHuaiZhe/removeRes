@@ -25,12 +25,12 @@ class AttrXmlValueRemoverTest {
 
   @Test
   fun getFileType() {
-    Assert.assertEquals("attr", remover.fileType)
+    Assert.assertEquals("attrs", remover.fileType)
   }
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("styleable", remover.resourceName)
+    Assert.assertEquals("styleable", remover.resType)
   }
 
   @Test
@@ -40,6 +40,6 @@ class AttrXmlValueRemoverTest {
 
   @Test
   fun getResourceType() {
-    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.mainType)
   }
 }

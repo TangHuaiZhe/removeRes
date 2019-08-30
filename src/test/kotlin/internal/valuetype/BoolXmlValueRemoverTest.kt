@@ -41,7 +41,7 @@ class BoolXmlValueRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("bool", remover.resourceName)
+    Assert.assertEquals("bool", remover.resType)
   }
 
   @Test
@@ -51,6 +51,6 @@ class BoolXmlValueRemoverTest {
 
   @Test
   fun getResourceType() {
-    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.mainType)
   }
 }

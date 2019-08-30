@@ -41,24 +41,11 @@ open class FileRemover constructor(
     } else {
       false
     }
-
   }
-
-  companion object {
-    fun extractFileName(file: File): String {
-      val lastIndexOf = file.name.lastIndexOf('.')
-      return if (file.name.length <= lastIndexOf) {
-        file.name
-      } else {
-        file.name.substring(0, lastIndexOf)
-      }
-    }
-  }
-
 }
 
 fun File.matchLast(fileType: String): Boolean {
-  // (\/${type}-.*$)|(\/${type}$)
+  // (\/${mainType}-.*$)|(\/${mainType}$)
   val regex = Regex("""(.*/$fileType-.*$)|(.*/$fileType$)""")
 //  println("the regex is $regex")
 //  println("file is $path")

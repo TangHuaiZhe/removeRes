@@ -41,7 +41,7 @@ class IdXmlValueRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("id", remover.resourceName)
+    Assert.assertEquals("id", remover.resType)
   }
 
   @Test
@@ -51,6 +51,6 @@ class IdXmlValueRemoverTest {
 
   @Test
   fun getResourceType() {
-    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.mainType)
   }
 }

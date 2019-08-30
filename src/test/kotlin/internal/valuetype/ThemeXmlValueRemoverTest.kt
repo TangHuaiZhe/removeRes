@@ -46,7 +46,7 @@ class ThemeXmlValueRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("style", remover.resourceName)
+    Assert.assertEquals("style", remover.resType)
   }
 
   @Test
@@ -56,6 +56,6 @@ class ThemeXmlValueRemoverTest {
 
   @Test
   fun getResourceType() {
-    Assert.assertEquals(SearchPattern.Type.STYLE, remover.type)
+    Assert.assertEquals(SearchPattern.Type.STYLE, remover.mainType)
   }
 }

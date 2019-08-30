@@ -51,7 +51,7 @@ class ColorXmlValueRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("color", remover.resourceName)
+    Assert.assertEquals("color", remover.resType)
   }
 
   @Test
@@ -61,6 +61,6 @@ class ColorXmlValueRemoverTest {
 
   @Test
   fun getResourceType() {
-    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.mainType)
   }
 }

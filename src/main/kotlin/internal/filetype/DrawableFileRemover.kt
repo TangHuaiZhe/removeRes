@@ -4,11 +4,11 @@ import util.SearchPattern
 
 class DrawableFileRemover constructor(
   override val fileType: String = "drawable",
-  override val resourceName: String = "drawable",
-  override val type: SearchPattern.Type = SearchPattern.Type.DRAWABLE
+  override val resType: String = "drawable",
+  override val mainType: SearchPattern.Type = SearchPattern.Type.DRAWABLE
 ) : FileRemover(
   fileType,
-  resourceName,
-  type
+  resType,
+  mainType
 )
 

@@ -4,10 +4,10 @@ import util.SearchPattern
 
 class LayoutFileRemover constructor(
   override val fileType: String = "layout",
-  override val resourceName: String = "layout",
-  override val type: SearchPattern.Type = SearchPattern.Type.LAYOUT
+  override val resType: String = "layout",
+  override val mainType: SearchPattern.Type = SearchPattern.Type.LAYOUT
 ) : FileRemover(
   fileType,
-  resourceName,
-  type
+  resType,
+  mainType
 )

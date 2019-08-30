@@ -53,11 +53,11 @@ class DrawableFileRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("drawable", remover.resourceName)
+    Assert.assertEquals("drawable", remover.resType)
   }
 
   @Test
   fun getType() {
-    Assert.assertEquals(SearchPattern.Type.DRAWABLE, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DRAWABLE, remover.mainType)
   }
 }

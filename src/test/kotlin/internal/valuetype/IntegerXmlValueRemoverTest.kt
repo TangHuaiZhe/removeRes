@@ -40,7 +40,7 @@ class IntegerXmlValueRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("integer", remover.resourceName)
+    Assert.assertEquals("integer", remover.resType)
   }
 
   @Test
@@ -50,6 +50,6 @@ class IntegerXmlValueRemoverTest {
 
   @Test
   fun getResourceType() {
-    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.mainType)
   }
 }

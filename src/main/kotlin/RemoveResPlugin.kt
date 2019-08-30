@@ -111,7 +111,7 @@ open class RemoveResPlugin : Plugin<Project> {
   private fun createScanTargetFileTexts(moduleSrcDirs: List<String>): String {
     val stringBuilder = StringBuilder()
 
-    moduleSrcDirs.parallelStream().map { File(it) }.forEach { srcDirFile ->
+    moduleSrcDirs.map { File(it) }.forEach { srcDirFile ->
       srcDirFile.walk().forEach {
         //                    println("deal with file ${it.name} , prepare to filter")
         if (it.name.matches(

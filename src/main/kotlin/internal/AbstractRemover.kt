@@ -1,7 +1,6 @@
 package internal
 
 import RemoveResExt
-import org.gradle.internal.impldep.com.google.common.annotations.VisibleForTesting
 import util.ColoredLogger
 import util.SearchPattern
 import java.io.File
@@ -15,21 +14,17 @@ import java.util.regex.Pattern
  */
 abstract class AbstractRemover(
   open val fileType: String,
-  /**
-   *  @`string`/app_name, $.`string`/app_name
-   * 资源名，检查是否在代码和xml中有引用
-   */
-  open val resourceName: String,
-  open val type: SearchPattern.Type
+  open val resType: String,
+  open val mainType: SearchPattern.Type
 ) {
   var excludeNames: ArrayList<String> = ArrayList()
   var dryRun = false
 
   abstract fun removeEach(resDirFile: File, scanTargetFileTexts: String)
 
-  fun createSearchPattern(target: String): String {
+  fun createSearchPattern(resName: String): String {
     //    println("匹配正则: $searchPattern")
-    return SearchPattern.create(resourceName, target, type)
+    return SearchPattern.create(resType, resName, mainType)
   }
 
   /**
@@ -79,10 +74,10 @@ abstract class AbstractRemover(
   override fun toString(): String {
     return ("fileType: "
         + fileType
-        + ", resourceName: "
-        + resourceName
-        + ", type: "
-        + type.toString())
+        + ", resType: "
+        + resType
+        + ", mainType: "
+        + mainType.toString())
   }
 
   fun isDryRun(): Boolean {
@@ -95,11 +90,5 @@ abstract class AbstractRemover(
   fun isPatternMatched(fileText: String, pattern: String): Boolean {
     val matcher = Pattern.compile(pattern).matcher(fileText);
     return matcher.find()
-  }
-
-  companion object {
-
-    var moduleSrcDirs = ArrayList<String>()
-
   }
 }

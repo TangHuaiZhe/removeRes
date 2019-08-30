@@ -45,11 +45,11 @@ class MipmapFileRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("mipmap", remover.resourceName)
+    Assert.assertEquals("mipmap", remover.resType)
   }
 
   @Test
   fun getType() {
-    Assert.assertEquals(SearchPattern.Type.DRAWABLE, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DRAWABLE, remover.mainType)
   }
 }

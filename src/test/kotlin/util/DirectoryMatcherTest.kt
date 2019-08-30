@@ -14,7 +14,7 @@ class DirectoryMatcherTest {
 
   @Test
   fun testDirMatch() {
-    //test match type with the last part of dir name
+    //test match mainType with the last part of dir name
 
     var dirName = "/values"
     var type = "values"

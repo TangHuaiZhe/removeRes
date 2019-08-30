@@ -24,10 +24,19 @@ import java.io.StringWriter
  * description:
  */
 open class XmlValueRemover constructor(
+  /**
+   * 资源文件名,
+   * 如colors.xml的color
+   * dimens.xml的dimens
+   */
   fileType: String,
+  /**
+   * R.xx.name的xx
+   */
   resourceName: String,
   /**
-   * Tag name to extract value from xml like <`dimen` name="width">, <`string` name="app_name">
+   * <`dimen` name="width">
+   * <`string` name="app_name">
    */
   open var tagName: String,
   type: SearchPattern.Type = SearchPattern.Type.DEFAULT

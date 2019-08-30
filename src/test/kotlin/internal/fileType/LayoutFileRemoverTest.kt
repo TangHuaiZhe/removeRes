@@ -64,11 +64,11 @@ class LayoutFileRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("layout", remover.resourceName)
+    Assert.assertEquals("layout", remover.resType)
   }
 
   @Test
   fun getType() {
-    Assert.assertEquals(SearchPattern.Type.LAYOUT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.LAYOUT, remover.mainType)
   }
 }

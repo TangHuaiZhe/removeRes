@@ -62,7 +62,7 @@ class StringXmlValueRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("string", remover.resourceName)
+    Assert.assertEquals("string", remover.resType)
   }
 
   @Test
@@ -72,6 +72,6 @@ class StringXmlValueRemoverTest {
 
   @Test
   fun getResourceType() {
-    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.mainType)
   }
 }

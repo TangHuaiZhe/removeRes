@@ -5,44 +5,32 @@ package util
  * created on: 2019-08-07 17:11
  * description:
  */
-import groovy.lang.Closure
-import org.codehaus.groovy.runtime.DefaultGroovyMethods
-import org.codehaus.groovy.runtime.StringGroovyMethods
+import org.gradle.util.GUtil.toCamelCase
 
 object SearchPattern {
-  /**
-   * @param target is file name or attribute name
-   * @return pattern string to grep src
-   */
-  fun create(resourceName: String, target: String, type: Type): String {
-    when (type) {
+
+  fun create(resType: String, resName: String, mainType: Type): String {
+    when (mainType) {
       Type.STYLE -> {
-        return """(@($resourceName|${resourceName}StateList)\/$target["|<|.])|(R\.$resourceName\.${toCamelCaseWithUnderscore(
-          target
-        )}[,|)|;|"|\s|:])|($target\.)|(parent="$target")"""
+        return """(@($resType|${resType}StateList)\/$resName["|<|.])|(R\.$resType\.${toCamelCaseWithUnderscore(
+          resName
+        )}[,|)|;|"|\s|:])|($resName\.)|(parent="$resName")"""
       }
       Type.DRAWABLE -> {
-        val targetDrawable = target.replace(".9", "")
-        return """(@($resourceName|${resourceName}StateList)\/$targetDrawable["|<])|(R\.$resourceName\.$targetDrawable[,|)|;|"|\s|:| ])"""
+        val targetDrawable = resName.replace(".9", "")
+        return """(@($resType|${resType}StateList)\/$targetDrawable["|<])|(R\.$resType\.$targetDrawable[,|)|;|"|\s|:| ])"""
       }
       Type.LAYOUT -> {
-        return """(@($resourceName|${resourceName}StateList)\/$target["|<])|(R\.$resourceName\.$target[,|)|;|"|\s|:])|(${toCamelCase(
-          target
+        return """(@($resType|${resType}StateList)\/$resName["|<])|(R\.$resType\.$resName[,|)|;|"|\s|:])|(${toCamelCase(
+          resName
         )}Binding)"""
       }
       else -> {
-        return """(@($resourceName|${resourceName}StateList)\/$target["|<])|(R\.$resourceName\.$target[,|)|;|"|\s|:| ])"""
+        return """(@($resType|${resType}StateList)\/$resName["|<])|(R\.$resType\.$resName[,|)|;|"|\s|:| ])"""
       }
     }
   }
 
-  /**
-   * @param target is file name or attribute name
-   * @return pattern string to grep src
-   */
-  fun create(resourceName: String, target: String): String {
-    return SearchPattern.create(resourceName, target, Type.DEFAULT)
-  }
 
   fun toCamelCaseWithUnderscore(name: String): String {
     val builder = StringBuilder()
@@ -58,32 +46,14 @@ object SearchPattern {
     return builder.toString()
   }
 
-  private fun toCamelCase(text: String): String {
-    return StringGroovyMethods.capitalize(
-      StringGroovyMethods.replaceAll(text, "(_)([A-Za-z0-9])", object : Closure<Any>(null, null) {
-        fun doCall(it: Array<Any>): Any {
-          return DefaultGroovyMethods.invokeMethod(it[2], "toUpperCase", arrayOfNulls<Any>(0))
-        }
-      })
-    )
-  }
-
   enum class Type {
     STYLE,
     DRAWABLE,
     LAYOUT,
     DEFAULT;
-
-    companion object {
-
-      fun from(type: String): Type {
-        return when (type) {
-          "style" -> STYLE
-          "drawable" -> DRAWABLE
-          "layout" -> LAYOUT
-          else -> DEFAULT
-        }
-      }
-    }
   }
 }
+
+//fun main() {
+//  println(toCamelCase("nd_ahN_ksd"))
+//}

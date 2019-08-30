@@ -48,7 +48,7 @@ class DimenXmlValueRemoverTest {
 
   @Test
   fun getResourceName() {
-    Assert.assertEquals("dimen", remover.resourceName)
+    Assert.assertEquals("dimen", remover.resType)
   }
 
   @Test
@@ -58,6 +58,6 @@ class DimenXmlValueRemoverTest {
 
   @Test
   fun getResourceType() {
-    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.type)
+    Assert.assertEquals(SearchPattern.Type.DEFAULT, remover.mainType)
   }
 }
