@@ -1,4 +1,7 @@
 # removeRes
+[![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
+
+
 移除Android项目中没有使用到的资源文件和xml value.
 
 集成:
