@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.tangnb.plugin"
-version = "1.0.3-SNAPSHOT"
+version = "1.0.4-SNAPSHOT"
 
 repositories {
   jcenter()
@@ -35,7 +35,7 @@ tasks.withType<KotlinCompile> {
 gradlePlugin {
   plugins {
     create("RemoveResPlugin") {
-      id = "com.tangnb.plugin"
+      id = "com.tangnb.RemoveRes"
       implementationClass = "RemoveResPlugin"
     }
   }

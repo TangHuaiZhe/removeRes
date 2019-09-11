@@ -31,7 +31,6 @@ object SearchPattern {
     }
   }
 
-
   fun toCamelCaseWithUnderscore(name: String): String {
     val builder = StringBuilder()
     builder.append(name)
