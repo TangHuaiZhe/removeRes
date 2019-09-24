@@ -13,11 +13,11 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.tangnb.plugin:removeRes:1.0.3-SNAPSHOT"
+    classpath "gradle.plugin.com.tangnb.plugin:removeRes:1.0.5-SNAPSHOT"
   }
 }
 
-apply plugin: "com.tangnb.plugin"
+apply plugin: "com.tangnb.RemoveRes"
 ```
 
 然后运行:
