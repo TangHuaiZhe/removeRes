@@ -13,11 +13,11 @@ import org.jdom2.output.EscapeStrategy
 import org.jdom2.output.Format
 import org.jdom2.output.LineSeparator
 import org.jdom2.output.XMLOutputter
-import util.ColoredLogger
+import util.LogUtil
 import util.SearchPattern
+import util.ThreadPoolManager
 import java.io.File
 import java.io.StringWriter
-import kotlin.concurrent.thread
 
 /**
  * author: tang
@@ -47,18 +47,18 @@ open class XmlValueRemover constructor(
     resDirFile.walk().filter { it.isDirectory && it.matchLast("values") }.forEach {
       // 遍历 res-values 目录下的所有文件
       it.walk().filter { it1 -> !it1.isDirectory && it1.exists() }.forEach { it2 ->
-        thread {
+        ThreadPoolManager.instance.execute(Runnable {
           if (isPatternMatched(it2.name, "$fileType.*")) {
             removeTagIfNeed(it2, scanTargetFileTexts)
           }
-        }
+        })
       }
     }
   }
 
   private fun removeTagIfNeed(file: File, scanTargetFileTexts: String) {
     if (isMatchedExcludeNames(file.path)) {
-      ColoredLogger.logYellow("[" + fileType + "]   Ignore checking " + file.name)
+      LogUtil.yellow("[" + fileType + "]   Ignore checking " + file.name)
       return
     }
 
@@ -90,7 +90,7 @@ open class XmlValueRemover constructor(
             // Check the element has tools:override attribute
             val attribute = element.getAttribute("override", TOOLS_NAMESPACE)
             if (attribute?.value == "true") {
-              ColoredLogger.logYellow(
+              LogUtil.yellow(
                 "["
                     + fileType
                     + "]   Skip checking "
@@ -104,7 +104,7 @@ open class XmlValueRemover constructor(
             val isMatched = checkTargetTextMatches(attr.value, scanTargetFileTexts)
 
             if (!isMatched) {
-              ColoredLogger.logGreen(
+              LogUtil.green(
                 "[" + fileType + "]   Remove " + attr.value + " in " + file.name
               )
               if (!dryRun) {
@@ -124,14 +124,14 @@ open class XmlValueRemover constructor(
         removeFileIfNeed(file)
       }
     } else {
-      ColoredLogger.log("[" + fileType + "]   No unused tags in " + file.name)
+      LogUtil.info("[" + fileType + "]   No unused tags in " + file.name)
     }
   }
 
   private fun removeFileIfNeed(file: File) {
     val doc = SAXBuilder().build(file)
     if (doc.rootElement.getChildren(tagName).size == 0) {
-      ColoredLogger.logGreen("[" + fileType + "]   Remove " + file.name + ".")
+      LogUtil.green("[" + fileType + "]   Remove " + file.name + ".")
       file.delete()
     }
   }

@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.tangnb.plugin"
-version = "1.0.5-SNAPSHOT"
+version = "1.0.5"
 
 repositories {
   jcenter()
@@ -76,52 +76,52 @@ pluginBundle {
   }
 }
 
-//tasks.named<Upload>("uploadArchives") {
-//    repositories.withGroovyBuilder {
-//        "mavenDeployer" {
-//            "repository"("url" to "file://localhost/Users/tang/.m2/repository")
-//            "pom" {
-//                setProperty("version", version)
-//                setProperty("artifactId", "removeRes")
-//                setProperty("groupId", group)
-//            }
-//        }
-//    }
-//}
-
-tasks {
-
-  "uploadArchives"(Upload::class) {
-
-    repositories {
-
-      withConvention(MavenRepositoryHandlerConvention::class) {
-
-        mavenDeployer {
-
-          withGroovyBuilder {
-            "repository"("url" to uri("/Users/tang/.m2/repository/"))
-//                        "snapshotRepository"("url" to uri("file://localhost/Users/tang/.m2/repository/snapshots"))
-          }
-
-          pom.project {
-            withGroovyBuilder {
-              "parent" {
-                "groupId"(group)
-                "artifactId"("removeRes")
-                "version"(version)
-              }
-              "licenses" {
-                "license" {
-                  "name"("The Apache Software License, Version 2.0")
-                  "url"("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                  "distribution"("repo")
-                }
-              }
+tasks.named<Upload>("uploadArchives") {
+    repositories.withGroovyBuilder {
+        "mavenDeployer" {
+            "repository"("url" to "file://localhost/Users/tang/.m2/repository")
+            "pom" {
+                setProperty("version", version)
+                setProperty("artifactId", "removeRes")
+                setProperty("groupId", group)
             }
-          }
         }
-      }
     }
-  }
 }
+
+//tasks {
+//
+//  "uploadArchives"(Upload::class) {
+//
+//    repositories {
+//
+//      withConvention(MavenRepositoryHandlerConvention::class) {
+//
+//        mavenDeployer {
+//
+//          withGroovyBuilder {
+//            "repository"("url" to uri("/Users/tang/.m2/repository/"))
+////                        "snapshotRepository"("url" to uri("file://localhost/Users/tang/.m2/repository/snapshots"))
+//          }
+//
+//          pom.project {
+//            withGroovyBuilder {
+//              "parent" {
+//                "groupId"(group)
+//                "artifactId"("removeRes")
+//                "version"(version)
+//              }
+//              "licenses" {
+//                "license" {
+//                  "name"("The Apache Software License, Version 2.0")
+//                  "url"("http://www.apache.org/licenses/LICENSE-2.0.txt")
+//                  "distribution"("repo")
+//                }
+//              }
+//            }
+//          }
+//        }
+//      }
+//    }
+//  }
+//}

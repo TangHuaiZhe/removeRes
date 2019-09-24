@@ -1,10 +1,10 @@
 package internal.filetype
 
 import internal.AbstractRemover
-import util.ColoredLogger
+import util.LogUtil
 import util.SearchPattern
+import util.ThreadPoolManager
 import java.io.File
-import kotlin.concurrent.thread
 
 open class FileRemover constructor(
   fileType: String,
@@ -15,11 +15,12 @@ open class FileRemover constructor(
   override fun removeEach(resDirFile: File, scanTargetFileTexts: String) {
     resDirFile.walk().forEach { it ->
       if (it.isDirectory && it.matchLast(fileType)) {
-        ColoredLogger.log("3,check Dir: ${it.path} , prepare to removeFileIfNeed")
+        LogUtil.info("3,check Dir: ${it.path} , prepare to removeFileIfNeed")
         it.walk().filter { !it.isDirectory }.forEach {
-          thread {
+
+          ThreadPoolManager.instance.execute(Runnable {
             removeFileIfNeed(it, scanTargetFileTexts)
-          }
+          })
         }
       }
     }
@@ -27,7 +28,7 @@ open class FileRemover constructor(
 
   private fun removeFileIfNeed(file: File, scanTargetFileTexts: String): Boolean {
     if (isMatchedExcludeNames(file.path)) {
-      ColoredLogger.logYellow("4,[$fileType]   Ignore checking ${file.name}")
+      LogUtil.yellow("4,[$fileType]   Ignore checking ${file.name}")
       return false
     }
 
@@ -36,7 +37,7 @@ open class FileRemover constructor(
     )
 
     return if (!isMatched) {
-      ColoredLogger.logGreen("4,[$fileType]  ${file.name} 未使用；Remove!!")
+      LogUtil.green("4,[$fileType]  ${file.name} 未使用；Remove!!")
       if (!dryRun) {
         file.delete()
       }

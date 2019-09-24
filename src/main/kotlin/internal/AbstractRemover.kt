@@ -1,7 +1,7 @@
 package internal
 
 import RemoveResExt
-import util.ColoredLogger
+import util.LogUtil
 import util.SearchPattern
 import java.io.File
 import java.util.ArrayList
@@ -40,7 +40,7 @@ abstract class AbstractRemover(
 
     //todo 兼容多渠道
     moduleSrcDirs.forEach {
-      ColoredLogger.logBlue("2,Checking [$fileType] in $it")
+      LogUtil.blue("2,Checking [$fileType] in $it")
 
       var resDirFile = File("$it/src/main/res")
       if (resDirFile.exists()) {
@@ -55,7 +55,7 @@ abstract class AbstractRemover(
   }
 
   fun checkTargetTextMatches(targetText: String, scanTargetFileTexts: String): Boolean {
-//    ColoredLogger.logGreen("检查 $fileType 类型文件是否被使用，文件名: $targetText.$fileType")
+//    LogUtil.green("检查 $fileType 类型文件是否被使用，文件名: $targetText.$fileType")
     val pattern = createSearchPattern(targetText)
     return isPatternMatched(
       scanTargetFileTexts,

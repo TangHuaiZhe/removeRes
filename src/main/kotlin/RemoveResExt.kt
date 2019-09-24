@@ -7,12 +7,12 @@ import java.util.ArrayList
  * description:
  */
 open class RemoveResExt {
-  val NAME = "RemoveResExt"
   var extraRemovers: List<AbstractRemover> = ArrayList()
   var excludeNames: ArrayList<String> = ArrayList()
   var dryRun = false
   var openRemoveFile = true
   var openRemoveXmlValues = true
+  var logOpen = true
 
   companion object {
     const val name = "RemoveRes"

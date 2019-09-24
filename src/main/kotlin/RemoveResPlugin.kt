@@ -1,4 +1,3 @@
-
 import internal.filetype.AnimFileRemover
 import internal.filetype.AnimatorFileRemover
 import internal.filetype.ColorFileRemover
@@ -17,9 +16,9 @@ import internal.valuetype.StyleXmlValueRemover
 import internal.valuetype.ThemeXmlValueRemover
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import util.ColoredLogger
+import util.LogUtil
+import util.ThreadPoolManager
 import java.io.File
-import kotlin.concurrent.thread
 
 /**
  * author: tang
@@ -33,16 +32,18 @@ open class RemoveResPlugin : Plugin<Project> {
     project.extensions.create(RemoveResExt.name, RemoveResExt::class.java)
 
     val moduleSrcDirs = getModuleSrcDirs(project)
-    ColoredLogger.logYellow("全部模块: $moduleSrcDirs")
+//    LogUtil.yellow("全部模块: $moduleSrcDirs")
 
     val scanTargetFileTexts = createScanTargetFileTexts(moduleSrcDirs)
-    ColoredLogger.logBlue("createScanTargetFileTexts ok")
+//    LogUtil.blue("createScanTargetFileTexts ok")
 
     project.task("RemoveRes").doLast {
 
-      ColoredLogger.logBlue("this is RemoveResPlugin,dealing with ${project.name}")
+      LogUtil.blue("this is RemoveResPlugin,dealing with ${project.name}")
 
       val extension: RemoveResExt = project.extensions.findByName(RemoveResExt.name) as RemoveResExt
+
+      logOpen = extension.logOpen
 
       logExtensionInfo(extension)
 
@@ -66,70 +67,94 @@ open class RemoveResPlugin : Plugin<Project> {
         )
       )
 
-      val threadList: ArrayList<Thread> = ArrayList()
+//      val threadList: ArrayList<Thread> = ArrayList()
 
       // Remove unused files
       if (extension.openRemoveFile) {
-        ColoredLogger.logGreen("doing FileRemover ${project.name}")
+        LogUtil.green("doing FileRemover ${project.name}")
         fileRemoverList.forEach {
-          val fileRemoverThread = thread {
-            ColoredLogger.logGreen("this is thread ${Thread.currentThread()}")
-            ColoredLogger.logYellow("1,[${it.fileType}] ======== Start ${it.fileType} checking in ${project.name}========")
+          val fileRemoverThread = Runnable {
+            LogUtil.green("this is thread ${Thread.currentThread()}")
+            LogUtil.yellow("1,[${it.fileType}] " +
+                "======== Start ${it.fileType} checking in ${project.name}========")
             it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
           }
-          threadList.add(fileRemoverThread)
+          ThreadPoolManager.instance.execute(fileRemoverThread)
+//          threadList.add(fileRemoverThread)
         }
       }
 
       //Remove unused xml values
       if (extension.openRemoveXmlValues) {
-        ColoredLogger.logGreen("doing XmlRemover ${project.name}")
+        LogUtil.green("doing XmlRemover ${project.name}")
         valueRemoverList.forEach {
-          val valueRemoverThread = thread {
-            ColoredLogger.logGreen("this is thread ${Thread.currentThread()}")
+          val valueRemoverThread = Runnable {
+            LogUtil.green("this is thread ${Thread.currentThread()}")
             it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
           }
-          threadList.add(valueRemoverThread)
+          ThreadPoolManager.instance.execute(valueRemoverThread)
+//          threadList.add(valueRemoverThread)
         }
       }
-      threadList.forEach {
-        it.join()
+
+      while (!ThreadPoolManager.instance.isOver) {
+        LogUtil.blue("${ThreadPoolManager.instance}")
+        Thread.sleep(3000)
       }
+//      threadList.forEach {
+//        it.join()
+//      }
     }
   }
 
   companion object {
 
+    var logOpen = false
+
+    const val string = ""
+    val moduleSrcDir = ArrayList<String>()
+
     fun logExtensionInfo(extension: RemoveResExt) {
       if (extension.extraRemovers.isNotEmpty()) {
-        ColoredLogger.log("extraRemovers:")
+        LogUtil.info("extraRemovers:")
         extension.extraRemovers.forEach {
-          ColoredLogger.log("  $it")
+          LogUtil.info("  $it")
         }
       }
 
       if (extension.excludeNames.isNotEmpty()) {
-        ColoredLogger.log("excludeNames:")
+        LogUtil.info("excludeNames:")
         extension.excludeNames.forEach {
-          ColoredLogger.log("  $it")
+          LogUtil.info("  $it")
         }
       }
-      ColoredLogger.log("dryRun: " + extension.dryRun.toString())
+      LogUtil.info("dryRun: " + extension.dryRun.toString())
     }
   }
 
   private fun getModuleSrcDirs(project: Project): ArrayList<String> {
-    return project.rootProject.allprojects.filter {
-      it.name != project.rootProject.name
-    }.map {
-      it.projectDir.path
-    } as ArrayList
+    return if (moduleSrcDir.isEmpty()) {
+      project.rootProject.allprojects.filter {
+        it.name != project.rootProject.name
+      }.map {
+        it.projectDir.path
+      } as ArrayList
+    }else{
+      moduleSrcDir
+    }
   }
+
+  var string = ""
 
   /**
    * 拼接需要查找的文件中的所有text内容
    */
   private fun createScanTargetFileTexts(moduleSrcDirs: List<String>): String {
+
+    if (string.isNotEmpty()) {
+      return string
+    }
+
     val stringBuilder = StringBuilder()
 
     moduleSrcDirs.map { File(it) }.forEach { srcDirFile ->
@@ -145,7 +170,7 @@ open class RemoveResPlugin : Plugin<Project> {
         }
       }
     }
-//            ColoredLogger.logGreen("createScanTargetFileTexts: $stringBuilder")
-    return stringBuilder.toString()
+    string = stringBuilder.toString()
+    return string
   }
 }
