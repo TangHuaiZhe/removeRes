@@ -4,6 +4,7 @@ import internal.AbstractRemover
 import util.ColoredLogger
 import util.SearchPattern
 import java.io.File
+import kotlin.concurrent.thread
 
 open class FileRemover constructor(
   fileType: String,
@@ -16,7 +17,9 @@ open class FileRemover constructor(
       if (it.isDirectory && it.matchLast(fileType)) {
         ColoredLogger.log("3,check Dir: ${it.path} , prepare to removeFileIfNeed")
         it.walk().filter { !it.isDirectory }.forEach {
-          removeFileIfNeed(it, scanTargetFileTexts)
+          thread {
+            removeFileIfNeed(it, scanTargetFileTexts)
+          }
         }
       }
     }

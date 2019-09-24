@@ -17,6 +17,7 @@ import util.ColoredLogger
 import util.SearchPattern
 import java.io.File
 import java.io.StringWriter
+import kotlin.concurrent.thread
 
 /**
  * author: tang
@@ -46,8 +47,10 @@ open class XmlValueRemover constructor(
     resDirFile.walk().filter { it.isDirectory && it.matchLast("values") }.forEach {
       // 遍历 res-values 目录下的所有文件
       it.walk().filter { it1 -> !it1.isDirectory && it1.exists() }.forEach { it2 ->
-        if (isPatternMatched(it2.name, "$fileType.*")) {
-          removeTagIfNeed(it2, scanTargetFileTexts)
+        thread {
+          if (isPatternMatched(it2.name, "$fileType.*")) {
+            removeTagIfNeed(it2, scanTargetFileTexts)
+          }
         }
       }
     }

@@ -1,3 +1,4 @@
+
 import internal.filetype.AnimFileRemover
 import internal.filetype.AnimatorFileRemover
 import internal.filetype.ColorFileRemover
@@ -18,6 +19,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import util.ColoredLogger
 import java.io.File
+import kotlin.concurrent.thread
 
 /**
  * author: tang
@@ -25,6 +27,7 @@ import java.io.File
  * description:
  */
 open class RemoveResPlugin : Plugin<Project> {
+
   override fun apply(project: Project) {
 
     project.extensions.create(RemoveResExt.name, RemoveResExt::class.java)
@@ -37,48 +40,66 @@ open class RemoveResPlugin : Plugin<Project> {
 
     project.task("RemoveRes").doLast {
 
-      ColoredLogger.logBlue("this is RemoveResPlugin ${project.version},dealing with ${project.name}")
+      ColoredLogger.logBlue("this is RemoveResPlugin,dealing with ${project.name}")
 
       val extension: RemoveResExt = project.extensions.findByName(RemoveResExt.name) as RemoveResExt
 
       logExtensionInfo(extension)
 
+      val fileRemoverList = ArrayList(
+        listOf(
+          LayoutFileRemover(), MenuFileRemover(),
+          MipmapFileRemover(),
+          DrawableFileRemover(), AnimatorFileRemover(),
+          AnimFileRemover(),
+          ColorFileRemover()
+        )
+      )
+
+      val valueRemoverList = ArrayList(
+        listOf(
+          AttrXmlValueRemover(), BoolXmlValueRemover(),
+          ColorXmlValueRemover(),
+          DimenXmlValueRemover(), IdXmlValueRemover(),
+          IntegerXmlValueRemover(),
+          StringXmlValueRemover(), StyleXmlValueRemover(), ThemeXmlValueRemover()
+        )
+      )
+
+      val threadList: ArrayList<Thread> = ArrayList()
+
       // Remove unused files
       if (extension.openRemoveFile) {
-        ColoredLogger.logGreen("doing FileRemover")
-        ArrayList(
-          listOf(
-            LayoutFileRemover(), MenuFileRemover(),
-            MipmapFileRemover(),
-            DrawableFileRemover(), AnimatorFileRemover(),
-            AnimFileRemover(),
-            ColorFileRemover()
-          )
-        ).parallelStream().forEach {
-          ColoredLogger.logYellow("1,[${it.fileType}] ======== Start ${it.fileType} checking in ${project.name}========")
-          it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
+        ColoredLogger.logGreen("doing FileRemover ${project.name}")
+        fileRemoverList.forEach {
+          val fileRemoverThread = thread {
+            ColoredLogger.logGreen("this is thread ${Thread.currentThread()}")
+            ColoredLogger.logYellow("1,[${it.fileType}] ======== Start ${it.fileType} checking in ${project.name}========")
+            it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
+          }
+          threadList.add(fileRemoverThread)
         }
       }
 
       //Remove unused xml values
       if (extension.openRemoveXmlValues) {
-        ColoredLogger.logGreen("doing XmlRemover")
-        ArrayList(
-          listOf(
-            AttrXmlValueRemover(), BoolXmlValueRemover(),
-            ColorXmlValueRemover(),
-            DimenXmlValueRemover(), IdXmlValueRemover(),
-            IntegerXmlValueRemover(),
-            StringXmlValueRemover(), StyleXmlValueRemover(), ThemeXmlValueRemover()
-          )
-        ).parallelStream().forEach {
-          it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
+        ColoredLogger.logGreen("doing XmlRemover ${project.name}")
+        valueRemoverList.forEach {
+          val valueRemoverThread = thread {
+            ColoredLogger.logGreen("this is thread ${Thread.currentThread()}")
+            it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
+          }
+          threadList.add(valueRemoverThread)
         }
+      }
+      threadList.forEach {
+        it.join()
       }
     }
   }
 
   companion object {
+
     fun logExtensionInfo(extension: RemoveResExt) {
       if (extension.extraRemovers.isNotEmpty()) {
         ColoredLogger.log("extraRemovers:")
