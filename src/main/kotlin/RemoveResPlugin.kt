@@ -37,63 +37,55 @@ open class RemoveResPlugin : Plugin<Project> {
     val scanTargetFileTexts = createScanTargetFileTexts(moduleSrcDirs)
 //    LogUtil.blue("createScanTargetFileTexts ok")
 
+    val fileRemoverList = ArrayList(
+        listOf(
+            LayoutFileRemover(), MenuFileRemover(),
+            MipmapFileRemover(),
+            DrawableFileRemover(), AnimatorFileRemover(),
+            AnimFileRemover(),
+            ColorFileRemover()
+        )
+    )
+
+    val valueRemoverList = ArrayList(
+        listOf(
+            AttrXmlValueRemover(), BoolXmlValueRemover(),
+            ColorXmlValueRemover(),
+            DimenXmlValueRemover(), IdXmlValueRemover(),
+            IntegerXmlValueRemover(),
+            StringXmlValueRemover(), StyleXmlValueRemover(), ThemeXmlValueRemover()
+        )
+    )
+
+    val extension: RemoveResExt = project.extensions.findByName(RemoveResExt.name) as RemoveResExt
+
+    logOpen = extension.logOpen
+
+    logExtensionInfo(extension)
+
     project.task("RemoveRes").doLast {
 
       LogUtil.blue("this is RemoveResPlugin,dealing with ${project.name}")
 
-      val extension: RemoveResExt = project.extensions.findByName(RemoveResExt.name) as RemoveResExt
-
-      logOpen = extension.logOpen
-
-      logExtensionInfo(extension)
-
-      val fileRemoverList = ArrayList(
-        listOf(
-          LayoutFileRemover(), MenuFileRemover(),
-          MipmapFileRemover(),
-          DrawableFileRemover(), AnimatorFileRemover(),
-          AnimFileRemover(),
-          ColorFileRemover()
-        )
-      )
-
-      val valueRemoverList = ArrayList(
-        listOf(
-          AttrXmlValueRemover(), BoolXmlValueRemover(),
-          ColorXmlValueRemover(),
-          DimenXmlValueRemover(), IdXmlValueRemover(),
-          IntegerXmlValueRemover(),
-          StringXmlValueRemover(), StyleXmlValueRemover(), ThemeXmlValueRemover()
-        )
-      )
-
-//      val threadList: ArrayList<Thread> = ArrayList()
-
       // Remove unused files
       if (extension.openRemoveFile) {
-        LogUtil.green("doing FileRemover ${project.name}")
         fileRemoverList.forEach {
+          LogUtil.green("doing FileRemover: $it in ${project.name}")
           val fileRemoverThread = Runnable {
-            LogUtil.green("this is thread ${Thread.currentThread()}")
-            LogUtil.yellow("1,[${it.fileType}] " +
-                "======== Start ${it.fileType} checking in ${project.name}========")
             it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
           }
           ThreadPoolManager.instance.execute(fileRemoverThread)
-//          threadList.add(fileRemoverThread)
         }
       }
 
       //Remove unused xml values
       if (extension.openRemoveXmlValues) {
-        LogUtil.green("doing XmlRemover ${project.name}")
         valueRemoverList.forEach {
+          LogUtil.green("doing XmlRemover: $it in ${project.name}")
           val valueRemoverThread = Runnable {
-            LogUtil.green("this is thread ${Thread.currentThread()}")
             it.remove(moduleSrcDirs, scanTargetFileTexts, extension)
           }
           ThreadPoolManager.instance.execute(valueRemoverThread)
-//          threadList.add(valueRemoverThread)
         }
       }
 
@@ -101,9 +93,6 @@ open class RemoveResPlugin : Plugin<Project> {
         LogUtil.blue("${ThreadPoolManager.instance}")
         Thread.sleep(3000)
       }
-//      threadList.forEach {
-//        it.join()
-//      }
     }
   }
 
@@ -139,7 +128,7 @@ open class RemoveResPlugin : Plugin<Project> {
       }.map {
         it.projectDir.path
       } as ArrayList
-    }else{
+    } else {
       moduleSrcDir
     }
   }
@@ -170,7 +159,6 @@ open class RemoveResPlugin : Plugin<Project> {
         }
       }
     }
-    string = stringBuilder.toString()
-    return string
+    return stringBuilder.toString()
   }
 }

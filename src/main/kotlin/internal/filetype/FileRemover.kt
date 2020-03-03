@@ -17,10 +17,7 @@ open class FileRemover constructor(
       if (it.isDirectory && it.matchLast(fileType)) {
         LogUtil.info("3,check Dir: ${it.path} , prepare to removeFileIfNeed")
         it.walk().filter { !it.isDirectory }.forEach {
-
-          ThreadPoolManager.instance.execute(Runnable {
-            removeFileIfNeed(it, scanTargetFileTexts)
-          })
+          removeFileIfNeed(it, scanTargetFileTexts)
         }
       }
     }

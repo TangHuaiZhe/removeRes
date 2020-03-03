@@ -11,47 +11,10 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 class ThreadPoolManager private constructor() {
   private val cpuCount = Runtime.getRuntime().availableProcessors()
-  private val corePoolSize = 60
-  private val maximumPoolSize = 100
-  private val keepAliveTime: Long = 30//存活时间
-  private val sPoolWorkQueue = LinkedBlockingQueue<Runnable>(10000)
-  private val executor: ThreadPoolExecutor
-
-  private val sThreadFactory = object : ThreadFactory {
-    private val mCount = AtomicInteger(1)
-    override fun newThread(@NonNull r: Runnable): Thread {
-      return Thread(r, "ThreadPoolManager #" + mCount.getAndIncrement())
-    }
-  }
-
-  /**
-   * 判断线程池是否已关闭
-   */
-  val isShutDown: Boolean
-    get() = executor.isShutdown
-
-  /**
-   * 关闭线程池后判断所有任务是否都已完成
-   */
-  val isTerminated: Boolean
-    get() = executor.isTerminated
+  private val executor: ThreadPoolExecutor = Executors.newFixedThreadPool(4 * cpuCount) as ThreadPoolExecutor
 
   val isOver: Boolean
-    get() = executor.queue.isEmpty()
-
-  init {
-
-    executor = ThreadPoolExecutor(
-      corePoolSize,
-      maximumPoolSize,
-      keepAliveTime,
-      TimeUnit.SECONDS,
-      sPoolWorkQueue,
-      sThreadFactory,
-      ThreadPoolExecutor.CallerRunsPolicy()
-    )
-    executor.allowCoreThreadTimeOut(true)
-  }
+    get() = executor.queue.isEmpty() && executor.activeCount == 0
 
   /**
    * 执行任务
@@ -60,57 +23,14 @@ class ThreadPoolManager private constructor() {
     executor.execute(runnable)
   }
 
-  /**
-   * 从线程池中移除任务
-   */
-  fun remove(runnable: Runnable) {
-    executor.remove(runnable)
-  }
-
-  fun shutDown() {
-    executor.shutdown()
-  }
-
-  /**
-   * 提交一个Callable任务用于执行
-   *
-   * @param task 任务
-   * @param <T>  泛型
-   * @return 表示任务等待完成的Future, 该Future的`get`方法在成功完成时将会返回该任务的结果。
-  </T> */
-  fun <T> submit(task: Callable<T>): Future<T> {
-    return executor.submit(task)
-  }
-
-  /**
-   * 提交一个Runnable任务用于执行
-   *
-   * @param task   任务
-   * @param result 返回的结果
-   * @param <T>    泛型
-   * @return 表示任务等待完成的Future, 该Future的`get`方法在成功完成时将会返回该任务的结果。
-  </T> */
-  fun <T> submit(task: Runnable, result: T): Future<T> {
-    return executor.submit(task, result)
-  }
-
-  /**
-   * 提交一个Runnable任务用于执行
-   *
-   * @param task 任务
-   * @return 表示任务等待完成的Future, 该Future的`get`方法在成功完成时将会返回null结果。
-   */
-  fun submit(task: Runnable): Future<*> {
-    return executor.submit(task)
-  }
-
   override fun toString(): String {
     return "ThreadPoolManager(executor=$executor)"
   }
 
   companion object {
 
-    @Volatile private var mInstance: ThreadPoolManager? = null
+    @Volatile
+    private var mInstance: ThreadPoolManager? = null
 
     val instance: ThreadPoolManager
       get() {
