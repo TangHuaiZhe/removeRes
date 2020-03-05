@@ -29,6 +29,13 @@ open class RemoveResPlugin : Plugin<Project> {
 
   override fun apply(project: Project) {
 
+    if (project != project.rootProject) {
+      LogUtil.info("RemoveResPlugin do nothing in ${project.displayName}")
+      return
+    } else {
+      LogUtil.info("RemoveResPlugin begin in ${project.displayName}")
+    }
+
     project.extensions.create(RemoveResExt.name, RemoveResExt::class.java)
 
     val moduleSrcDirs = getModuleSrcDirs(project)

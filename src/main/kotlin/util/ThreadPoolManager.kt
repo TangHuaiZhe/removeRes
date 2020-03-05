@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 class ThreadPoolManager private constructor() {
   private val cpuCount = Runtime.getRuntime().availableProcessors()
-  private val executor: ThreadPoolExecutor = Executors.newFixedThreadPool(4 * cpuCount) as ThreadPoolExecutor
+  private val executor: ThreadPoolExecutor = Executors.newFixedThreadPool(2 * cpuCount + 1) as ThreadPoolExecutor
 
   val isOver: Boolean
     get() = executor.queue.isEmpty() && executor.activeCount == 0
