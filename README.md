@@ -22,6 +22,3 @@ apply plugin: "com.tangnb.RemoveRes"
 
 然后运行:
 `./gradlew RemoveRes --parallel`
-
-如果项目module较多，可以只在主工程执行任务:
-`./gradlew mainModule:RemoveRes`
