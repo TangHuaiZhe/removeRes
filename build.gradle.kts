@@ -5,12 +5,12 @@ plugins {
   java
   kotlin("jvm") version "1.3.40"
   maven
-  id("com.gradle.plugin-publish") version "0.10.1"
+  id("com.gradle.plugin-publish") version "0.11.0"
   `java-gradle-plugin`
 }
 
 group = "com.tangnb.plugin"
-version = "1.0.6"
+version = "1.0.7"
 
 repositories {
   jcenter()

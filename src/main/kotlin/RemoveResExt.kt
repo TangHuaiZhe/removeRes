@@ -11,7 +11,7 @@ open class RemoveResExt {
   var excludeNames: ArrayList<String> = ArrayList()
   var dryRun = false
   var openRemoveFile = true
-  var openRemoveXmlValues = true
+  var openRemoveXmlValues = false
   var logOpen = true
 
   companion object {
